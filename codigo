@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <string.h>
+
+void swap(char *arr[], int i, int j) {
+    char *temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+int partition(char *arr[], int inf, int sup, int *comp, int *trocas) {
+    char *pivot = arr[sup];
+    int i = (inf - 1);
+
+    for (int j = inf; j <= sup - 1; j++) {
+        (*comp)++;
+        if (strcmp(arr[j], pivot) < 0) {
+            i++;
+            swap(arr, i, j);
+            (*trocas)++; }
+    }
+    swap(arr, i + 1, sup);
+    (*trocas)++;
+    return (i + 1);
+}
+
+void quicksort(char *arr[], int inf, int sup, int *comp, int *trocas) {
+    if (inf < sup) {
+        int pivotI = partition(arr, inf, sup, comp, trocas);
+        quicksort(arr, inf, pivotI - 1, comp, trocas);
+        quicksort(arr, pivotI + 1, sup, comp, trocas);}}
+
+int main() {
+    char *arr[20] = {
+        "maca", "banana", "pera", "uva", "laranja", "abacaxi", "limão", "manga", "abacate", "kiwi",
+        "cereja", "morango", "pêssego", "goiaba", "melancia", "framboesa", "amora", "caqui", "figo", "papaya"};
+
+    int comp = 0;
+    int trocas = 0;
+    int arrSize = sizeof(arr) / sizeof(arr[0]);
+
+    printf("vetor:\n");
+    for (int i = 0; i < arrSize; i++) {
+        printf("%s ", arr[i]);
+    }
+
+    quicksort(arr, 0, arrSize - 1, &comp, &trocas);
+
+    printf("ordenado:\n");
+    for (int i = 0; i < arrSize; i++) {
+        printf("%s ", arr[i]);
+    }
+
+    printf("comparações: %d\n", comp);
+    printf("trocas: %d\n", trocas);
+
+    char *media = arr[arrSize / 2];
+    printf("media: %s", media);
+
+    FILE *outputFile = fopen("saida.txt", "w");
+    if (outputFile) {
+        fprintf(outputFile, "ordenado: ");
+        for (int i = 0; i < arrSize; i++) {
+            fprintf(outputFile, "%s ", arr[i]);
+        }
+        fprintf(outputFile, "comparações: %d\n", comp);
+        fprintf(outputFile, "trocas: %d\n", trocas);
+        fprintf(outputFile, "media: %s", media);
+
+        fclose(outputFile);}
+     else {
+        printf("Erro"); }
+   
+return 0;
+}
